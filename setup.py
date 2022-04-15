@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-# cool stuff again
+# cool stuff again, no really
 
 setup(
     name="q2-nested-classification",
