@@ -4,7 +4,6 @@ from setuptools import setup, find_packages
 setup(
     name="q2-nested-classification",
     version='0.0.1',
-    #cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(),
     url="https://qiime2.org",
     license="BSD-3-Clause",
