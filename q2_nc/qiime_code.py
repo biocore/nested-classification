@@ -14,7 +14,7 @@ from qiime2 import Artifact
 from qiime2 import Visualization
 from qiime2.plugins import sample_classifier
 from qiime2.plugins import feature_table
-import mcdonald
+#import mcdonald
 import pandas as pd
 from IPython.display import display
 

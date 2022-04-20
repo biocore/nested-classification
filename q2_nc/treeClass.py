@@ -141,8 +141,9 @@ class TreeClass:
     def get_identifiers(self, node, id_col):
         clade_set = self.make_clade_set(node)
         rows = self.df[self.meta_dict.isin(clade_set)]
-        identifiers = rows[id_col]
-        return identifiers
+        return rows
+        #identifiers = rows[id_col]
+        #return identifiers
          
 
         #returns the subset of rows that correspond to set of given taxids
@@ -156,13 +157,14 @@ class TreeClass:
         non_identifiers = rows[id_col]
         return non_identifiers
         
+    def get_tree(self):
+        return self.ncbi_tree
 
-
-
+'''
 df = pd.read_csv('metadata.tsv', sep='\t') 
 print(len(df.index))
 real_tree = 7742 #where should we start? vertebrae = 7742 
-'''
+
 #homo_dict = {9605: 2, 9606: 3, 2665953:10}
 #homo_tree = "homo"
 #ncbi_tree = TreeClass(homo_tree, homo_dict) 
