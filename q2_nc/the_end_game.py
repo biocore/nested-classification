@@ -55,6 +55,13 @@ for node in tree.get_tree().traverse(strategy="levelorder"):
             #here we have enough samples to train tree
             id_col = "sample_id" 
             boolIDS = tree.get_identifiers(taxid, id_col)
-            df.insert(0, "IsChild", boolIDS, True)
-            probs, estimator = trains ("metadata.tsv", "feature_table.")
-
+            # change create tree to return meta and ft
+            meta, ft = createTree()
+            meta.insert(0, "isChild", boolIDS, True)
+            # change trains to return roc_auc instead of probs
+            roc_auc, estimator = trains (meta, ft) # only estimator is valuable, classifier
+            # can we save in the node?
+            if roc_auc[0] and roc_auc[1] > .5:
+                do...
+            # estimator > output @ row_taxid
+            kids.estimator = estimator
