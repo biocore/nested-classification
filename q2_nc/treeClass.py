@@ -14,7 +14,8 @@ class TreeClass:
     def __init__(self, taxid, df, tax_col):
         self.ncbi_tree = ncbi.get_descendant_taxa(taxid, return_tree=True)
         self.df = df;
-        self.meta_dict = self.df[tax_col].value_counts()
+        #self.meta_dict = self.df[tax_col].value_counts()
+        self.meta_dict = self.df[tax_col]
         self.build_sample_tree()
         #print(self.ncbi_tree)
         # make better tree
@@ -80,7 +81,6 @@ class TreeClass:
         for curr_node in self.ncbi_tree.traverse(strategy="postorder"):
             if taxid == curr_node.taxid: 
                 #print(f"taxon id: {taxid}, number of self-samples: {curr_node.self_samples}, sum of self and child samples: {curr_node.total_samples}")
-                
                 if return_samples: 
                     return curr_node.total_samples
                 else: 
@@ -109,12 +109,33 @@ class TreeClass:
         clade = set()
         return_bool = False 
         root_type = self.look_up_taxid(node, return_samples=False)
+        #for curr_node in self.ncbi_tree.traverse(strategy="postorder"):
+        #    if taxid == curr_node.taxid: 
         if root_type == False:
             print("This taxid node is not in tree")
             return return_bool
         for curr_node in root_type.traverse(strategy="preorder"):
             clade.add(curr_node.taxid) 
         return clade
+    
+    '''
+    same as make_clade() without checks if we have that taxid in tree
+    '''
+    def faster_make_clade(self, node):
+        clade = set()
+        for curr_node in node.traverse(strategy="preorder"):
+            clade.add(curr_node.taxid) 
+        return clade
+    '''
+    make_clade without error checks but only has nodes which we have enough data on
+    '''
+    def fast_filtered_clade(self, node):
+        clade = set()
+        for curr_node in node.traverse(strategy="preorder"):
+            if self.decision(curr_node):
+                clade.add(curr_node.taxid) 
+        return clade
+
     #pandas series to describe class labels - two: is/isnt in clade
     # up tree aggregation using sets and the stuff daniel put in terminal 
 
@@ -141,12 +162,27 @@ class TreeClass:
     def get_identifiers(self, node, id_col):
         clade_set = self.make_clade_set(node)
         rows = self.df[self.meta_dict.isin(clade_set)]
-        return rows
-        #identifiers = rows[id_col]
-        #return identifiers
-         
-
+        
+        identifiers = rows[id_col]
+        return identifiers
         #returns the subset of rows that correspond to set of given taxids
+         
+    '''
+    return boolean list corresponding to rows
+    '''
+    def get_bool(self, node):
+        clade_set = self.make_clade_set(node)
+        print(self.meta_dict.isin(clade_set))
+        rows = self.df[self.meta_dict.isin(clade_set)]
+        #return rows
+    '''
+    return boolean list not corresponding to rows
+    '''
+    def get_not_bool(self, node):
+        clade_set = self.make_clade_set(node)
+        rows = self.df[~self.meta_dict.isin(clade_set)]
+        return rows
+
     '''
     @param: node is root of subtree set, id_col is string of tsv's id column's name
     @return: list of indentifiers NOT in tsv from node's subtree 
@@ -160,11 +196,15 @@ class TreeClass:
     def get_tree(self):
         return self.ncbi_tree
 
-'''
-df = pd.read_csv('metadata.tsv', sep='\t') 
-print(len(df.index))
-real_tree = 7742 #where should we start? vertebrae = 7742 
 
+df = pd.read_csv('metadata.tsv', sep='\t') 
+#print(len(df.index))
+real_tree = 7742 #where should we start? vertebrae = 7742 
+ncbi_tree = TreeClass(real_tree, df, 'ncbi_taxon_id')
+ncbi_tree.get_bool(8782)
+
+
+'''
 #homo_dict = {9605: 2, 9606: 3, 2665953:10}
 #homo_tree = "homo"
 #ncbi_tree = TreeClass(homo_tree, homo_dict) 
