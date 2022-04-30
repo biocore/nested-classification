@@ -22,7 +22,9 @@ meta_d = None
 fet_tab = None	
 	
 def create_tree(meta, ft ): 
-	return None
+	fet_tab = Artifact.load(ft)
+	meta_d = qiime2.Metadata.load(meta)
+	return meta_d, fet_tab
 	
 	
 
@@ -73,9 +75,7 @@ def ROC(probs):
 
  
 def main(met, ft):
-	#create_tree('mcdonald/met.tsv','mcdonald/ft.qza')
-	fet_tab = Artifact.load(ft)
-	meta_d = qiime2.Metadata.load(met)
+	meta_d, fet_tab = create_tree(met,ft)
 	probs, estimator = trains(meta_d,fet_tab)
 
 

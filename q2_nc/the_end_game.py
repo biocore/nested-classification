@@ -37,24 +37,39 @@ class Train:
 
 
 
-#CHANGE 
+
 df = pd.read_csv("metadata.tsv", sep='\t')
 tax_col = "taxid_column" 
 taxid = 7742 #vertebraes
-
+path = '/estimator/'
+os.mkdir(path, mode = 0o777, *, dir_fd = None)
 tree = TreeClass(taxid, df, tax_col)
 
-for node in tree.get_tree().traverse(strategy="levelorder"):
+for node in tree.get_tree().traverse(strategy="preorder"):
     taxid = node.taxid
+    #Joelle speed decistion 
     if tree.decision(taxid) is False:
-        continue;
-    for kids in node.get_children():
-        taxid = kids.taxid
-        
-        if tree.decision(taxid):
+        continue; 
+   else:
             #here we have enough samples to train tree
-            id_col = "sample_id" 
-            boolIDS = tree.get_identifiers(taxid, id_col)
-            df.insert(0, "IsChild", boolIDS, True)
-            probs, estimator = trains ("metadata.tsv", "feature_table.")
-
+        #id_col = "sample_id" 
+        boolIDS = tree.get_bool(taxid)
+        # change create tree to return meta and ft
+        meta, ft = createTree()
+        meta.insert(0, "isChild", boolIDS, True)
+        # change trains to return roc_auc instead of probs
+        roc_auc, estimator = trains (meta, ft) # only estimator is valuable, classifier
+        # can we save in the node?
+        if roc_auc[1] > .5: 
+            #path_list=path.split"/"
+            #i =0
+            #while(!taxid.isChild(path_list[i]):
+                #i++
+            #for j in path_list[0:i+1]
+               #path = path + '/' + j   
+            #path = path+taxid
+           
+            estimaor.save('path'+taxid+'qza')
+               
+            # estimator > output @ row_taxid
+            kids.estimator = estimator
