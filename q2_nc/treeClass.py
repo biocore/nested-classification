@@ -172,14 +172,14 @@ class TreeClass:
     '''
     def get_bool(self, node):
         clade_set = self.make_clade_set(node)
-        print(self.meta_dict.isin(clade_set))
-        rows = self.df[self.meta_dict.isin(clade_set)]
-        #return rows
+        return self.meta_dict.isin(clade_set)
+        
     '''
     return boolean list not corresponding to rows
     '''
     def get_not_bool(self, node):
         clade_set = self.make_clade_set(node)
+        return ~self.meta_dict.isin(clade_set)
         rows = self.df[~self.meta_dict.isin(clade_set)]
         return rows
 
@@ -196,15 +196,15 @@ class TreeClass:
     def get_tree(self):
         return self.ncbi_tree
 
-
+'''
 df = pd.read_csv('metadata.tsv', sep='\t') 
 #print(len(df.index))
 real_tree = 7742 #where should we start? vertebrae = 7742 
 ncbi_tree = TreeClass(real_tree, df, 'ncbi_taxon_id')
-ncbi_tree.get_bool(8782)
+print(ncbi_tree.get_bool(7742))
 
 
-'''
+
 #homo_dict = {9605: 2, 9606: 3, 2665953:10}
 #homo_tree = "homo"
 #ncbi_tree = TreeClass(homo_tree, homo_dict) 

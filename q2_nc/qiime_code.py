@@ -21,9 +21,9 @@ from IPython.display import display
 meta_d = None
 fet_tab = None	
 	
-def create_tree(meta, ft ): 
+def create_tree(meta, ft): 
 	fet_tab = Artifact.load(ft)
-	meta_d = qiime2.Metadata.load(meta)
+	meta_d = qiime2.Metadata(meta)
 	return meta_d, fet_tab
 	
 	
@@ -39,17 +39,17 @@ def store():
 
 def trains(meta, ft):#return trained model
 	type(fet_tab)
-	train, test, trash_1, trash_2 = sample_classifier.actions.split_table(ft, meta.get_column("sample_type"))
-	estimator , importance = sample_classifier.actions.fit_classifier(train, meta.get_column("sample_type"))
+	train, test, trash_1, trash_2 = sample_classifier.actions.split_table(ft, meta.get_column("isChild"))
+	estimator , importance = sample_classifier.actions.fit_classifier(train, meta.get_column("isChild"))
 	y_pred, probs = sample_classifier.actions.predict_classification(test, estimator)
 	ROC(probs) 
 	return probs, estimator 
 
 def ROC(probs):
 	data= probs.view(pd.DataFrame)
-	meta = pd.read_csv('mcdonald/met.tsv', sep = '\t')
+	meta = pd.read_csv('metadata.tsv', sep = '\t')
 	meta.set_index("sample_name", inplace = True)
-	column = meta["sample_type"]
+	column = meta["isChild"]
 	column_label = data.index
 	print(column_label)
 	#the meta data that data doesn't 
@@ -74,10 +74,10 @@ def ROC(probs):
 	return roc_auc
 
  
-def main(met, ft):
-	meta_d, fet_tab = create_tree(met,ft)
-	probs, estimator = trains(meta_d,fet_tab)
+#def main(met, ft):
+#	meta_d, fet_tab = create_tree(met,ft)
+#	probs, estimator = trains(meta_d,fet_tab)
 
 
-main('mcdonald/met.tsv','mcdonald/ft.qza')
+#main('metadata.tsv','tb.qza')
 
