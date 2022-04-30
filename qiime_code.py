@@ -37,11 +37,11 @@ def store():
 
 def trains(meta, ft):#return trained model
 	type(fet_tab)
-	train, test, trash_1, trash_2 = sample_classifier.actions.split_table(ft, meta.get_column("sample_type"))
-	estimator , importance = sample_classifier.actions.fit_classifier(train, meta.get_column("sample_type"))
+	train, test, trash_1, trash_2 = sample_classifier.actions.split_table(ft, meta.get_column("isChild"))
+	estimator , importance = sample_classifier.actions.fit_classifier(train, meta.get_column("isChild"))
 	y_pred, probs = sample_classifier.actions.predict_classification(test, estimator)
-	ROC(probs) 
-	return probs, estimator 
+	total_val = ROC(probs) 
+	return total_val, estimator 
 
 def ROC(probs):
 	data= probs.view(pd.DataFrame)
