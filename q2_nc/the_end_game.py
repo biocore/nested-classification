@@ -26,6 +26,8 @@ import os
 from treeClass import TreeClass
 import qiime_code
 
+import time
+
 
 #class Train:
 
@@ -53,6 +55,7 @@ path = "estimator/"
 tree = TreeClass(taxid, df, tax_col)
 
 for node in tree.get_tree().traverse(strategy="preorder"):
+    initial = time.perf_counter()
     taxid = node.taxid
     #Joelle speed decistion 
     #if tree.decision(taxid) is False:
@@ -61,21 +64,21 @@ for node in tree.get_tree().traverse(strategy="preorder"):
         #here we have enough samples to train tree
     #id_col = "sample_id" 
     boolIDS = tree.get_bool(taxid)
-    print(boolIDS)
+    #print(boolIDS)
     # change create tree to return meta and ft
     #df = dataframe of metadata
     meta_df = df.copy()
     meta_df.insert(1, "isChild", boolIDS, True)
     #THIS LINE DOES NOT WORK:
     meta_df.set_index(meta_df.columns[0], drop=True, append=False, inplace=True)
-    print(meta_df)
+    #print(meta_df)
     meta, ft = qiime_code.create_tree(meta_df,'tb.qza')
     #meta.insert(0, "isChild", boolIDS, True)
     # change trains to return roc_auc instead of probs
     roc_auc, estimator = qiime_code.trains(meta, ft, meta_df) # only estimator is valuable, classifier
     # can we save in the node?
-    estimator.save(path+str(taxid)+'.qza')
-    #if roc_auc[1] > .5: 
+    #estimator.save(path+str(taxid)+'.qza')
+    if roc_auc[1] > 0.5: 
         #path_list=path.split"/"
         #i =0
         #i =0
@@ -85,7 +88,8 @@ for node in tree.get_tree().traverse(strategy="preorder"):
            #path = path + '/' + j   
         #path = path+taxid
        
-        #estimator.save('path'+taxid+'qza')
-           
+        estimator.save(path+str(taxid)+'.qza')
+        final = time.perf_counter()
         # estimator > output @ row_taxid
         #kids.estimator = estimator
+    print(final-initial)

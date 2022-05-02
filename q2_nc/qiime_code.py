@@ -42,36 +42,40 @@ def trains(meta, ft, df): #return trained model
 	train, test, trash_1, trash_2 = sample_classifier.actions.split_table(ft, meta.get_column("isChild"))
 	estimator, importance = sample_classifier.actions.fit_classifier(train, meta.get_column("isChild"))
 	y_pred, probs = sample_classifier.actions.predict_classification(test, estimator)
-	#ROC(probs, df) 
-	return probs, estimator 
+	roc = ROC(probs, df) 
+	return roc, estimator 
 
 def ROC(probs, meta):
 	data = probs.view(pd.DataFrame)
+	
 	#meta = pd.read_csv('metadata.tsv', sep = '\t')
 	#meta.set_index("sample-id", inplace = True)
 	column = meta["isChild"]
 	column_label = data.index
-	print(column_label)
+	
 	#the meta data that data doesn't 
 	column = column.loc[column_label] 
 	#listy = column.tolist()
 	labels = data.columns.values.tolist()
-	print(labels)
+	labels.append("ignore")
+	#print(labels)
 	#l = len(labels)
 	#w = len(column)
-	out = label_binarize(column, labels)
+	out = label_binarize(y=column, classes=labels)
+	#print(out)
 	#print(type(out))
 	roc_auc = dict()
 	fpr = dict()
 	tpr = dict()
-	type(out)
+	#type(out)
 	data_num = data.to_numpy()
-	for i in range(len(labels)):
+	#print(range(len(data_num[0])))
+	for i in range(len(data_num[0])):
 		#print(out[:,i])
 		#print(data.to_numpy()[:,i])
 		fpr[i], tpr[i], _ = roc_curve(out[:,i], data_num[:,i])
 		roc_auc[i]=auc(fpr[i],tpr[i])
-		print(roc_auc[i])
+		#print(roc_auc[i])
 	return roc_auc
 
  
