@@ -54,9 +54,18 @@ path = "estimator/"
 #os.mkdir(path, mode = 0o777, dir_fd = None)
 tree = TreeClass(taxid, df, tax_col)
 
+#tree.print_total_samples()
+samples = 0
 for node in tree.get_tree().traverse(strategy="preorder"):
     initial = time.perf_counter()
     taxid = node.taxid
+    if samples == tree.get_samples(node):
+        estimator.save(path+str(taxid)+'.qza')
+        final = time.perf_counter()
+        print(final-initial)
+        continue
+    samples = tree.get_samples(node)
+    
     #Joelle speed decistion 
     #if tree.decision(taxid) is False:
     #    continue; 

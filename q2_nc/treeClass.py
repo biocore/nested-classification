@@ -18,6 +18,7 @@ class TreeClass:
         self.df = df;
         #self.meta_dict = self.df[tax_col].value_counts()
         self.meta_dict = self.df[tax_col]
+        self.count_dict = self.meta_dict.value_counts()
         self.build_sample_tree()
         #print(self.ncbi_tree)
         # make better tree
@@ -32,15 +33,15 @@ class TreeClass:
         for curr_node in self.ncbi_tree.traverse(strategy="postorder"):
         
             if curr_node.is_leaf(): 
-                if curr_node.taxid in self.meta_dict: 
-                    curr_node.self_samples = self.meta_dict[curr_node.taxid]
-                    curr_node.total_samples = self.meta_dict[curr_node.taxid]
+                if curr_node.taxid in self.count_dict: 
+                    curr_node.self_samples = self.count_dict[curr_node.taxid]
+                    curr_node.total_samples = self.count_dict[curr_node.taxid]
                 else:
                     curr_node.self_samples = 0
                     curr_node.total_samples = 0
             else:
-                if curr_node.taxid in self.meta_dict: 
-                    curr_node.self_samples = self.meta_dict[curr_node.taxid]
+                if curr_node.taxid in self.count_dict: 
+                    curr_node.self_samples = self.count_dict[curr_node.taxid]
                 else:
                     curr_node.self_samples = 0
                 
@@ -61,8 +62,10 @@ class TreeClass:
     '''
     def print_total_samples(self):
         for curr_node in self.ncbi_tree.traverse(strategy="postorder"):
-            print(curr_node.total_samples)
+            print(curr_node.total_samples) 
 
+    def get_samples(self, node):
+        return node.total_samples
     '''
     prints "taxid: [number of respective accumulated samples]" for all non-zero
     total_samples in tree
