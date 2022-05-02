@@ -37,27 +37,28 @@ def store():
 
 #create_tree('mcdonald/mds.tsv','mcdonald/tb.qza')
 
-def trains(meta, ft):#return trained model
+def trains(meta, ft, df): #return trained model
 	type(fet_tab)
 	train, test, trash_1, trash_2 = sample_classifier.actions.split_table(ft, meta.get_column("isChild"))
-	estimator , importance = sample_classifier.actions.fit_classifier(train, meta.get_column("isChild"))
+	estimator, importance = sample_classifier.actions.fit_classifier(train, meta.get_column("isChild"))
 	y_pred, probs = sample_classifier.actions.predict_classification(test, estimator)
-	ROC(probs) 
+	#ROC(probs, df) 
 	return probs, estimator 
 
-def ROC(probs):
-	data= probs.view(pd.DataFrame)
-	meta = pd.read_csv('metadata.tsv', sep = '\t')
-	meta.set_index("sample_name", inplace = True)
+def ROC(probs, meta):
+	data = probs.view(pd.DataFrame)
+	#meta = pd.read_csv('metadata.tsv', sep = '\t')
+	#meta.set_index("sample-id", inplace = True)
 	column = meta["isChild"]
 	column_label = data.index
 	print(column_label)
 	#the meta data that data doesn't 
 	column = column.loc[column_label] 
-	listy = column.tolist()
+	#listy = column.tolist()
 	labels = data.columns.values.tolist()
-	l = len(labels)
-	w = len(column)
+	print(labels)
+	#l = len(labels)
+	#w = len(column)
 	out = label_binarize(column, labels)
 	#print(type(out))
 	roc_auc = dict()
@@ -68,7 +69,7 @@ def ROC(probs):
 	for i in range(len(labels)):
 		#print(out[:,i])
 		#print(data.to_numpy()[:,i])
-		fpr[i], tpr[i], _ = roc_curve(  out[:,i], data_num[:,i])
+		fpr[i], tpr[i], _ = roc_curve(out[:,i], data_num[:,i])
 		roc_auc[i]=auc(fpr[i],tpr[i])
 		print(roc_auc[i])
 	return roc_auc

@@ -39,8 +39,14 @@ import qiime_code
 
 
 
-df = pd.read_csv("metadata.tsv", sep='\t')
+og_df = pd.read_csv("metadata.tsv", sep='\t')
 tax_col = "ncbi_taxon_id" 
+id_col = "sample-id"
+
+df = pd.DataFrame()
+df.insert(0, id_col, og_df[id_col], True)
+df.insert(1, tax_col, og_df[tax_col], True)
+
 taxid = 7742 #vertebraes
 path = "estimator/"
 #os.mkdir(path, mode = 0o777, dir_fd = None)
@@ -58,7 +64,7 @@ for node in tree.get_tree().traverse(strategy="preorder"):
     print(boolIDS)
     # change create tree to return meta and ft
     #df = dataframe of metadata
-    meta_df = df
+    meta_df = df.copy()
     meta_df.insert(1, "isChild", boolIDS, True)
     #THIS LINE DOES NOT WORK:
     meta_df.set_index(meta_df.columns[0], drop=True, append=False, inplace=True)
@@ -66,9 +72,10 @@ for node in tree.get_tree().traverse(strategy="preorder"):
     meta, ft = qiime_code.create_tree(meta_df,'tb.qza')
     #meta.insert(0, "isChild", boolIDS, True)
     # change trains to return roc_auc instead of probs
-    roc_auc, estimator = qiime_code.trains(meta, ft) # only estimator is valuable, classifier
+    roc_auc, estimator = qiime_code.trains(meta, ft, meta_df) # only estimator is valuable, classifier
     # can we save in the node?
-    if roc_auc[1] > .5: 
+    estimator.save(path+str(taxid)+'.qza')
+    #if roc_auc[1] > .5: 
         #path_list=path.split"/"
         #i =0
         #i =0
@@ -78,7 +85,7 @@ for node in tree.get_tree().traverse(strategy="preorder"):
            #path = path + '/' + j   
         #path = path+taxid
        
-        estimator.save('path'+taxid+'qza')
+        #estimator.save('path'+taxid+'qza')
            
         # estimator > output @ row_taxid
         #kids.estimator = estimator

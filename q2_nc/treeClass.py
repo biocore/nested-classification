@@ -1,5 +1,7 @@
+from pickletools import string1
 import pandas as pd
 from ete3 import NCBITaxa
+from pyparsing import string_start
 ncbi = NCBITaxa()
 
 
@@ -172,14 +174,14 @@ class TreeClass:
     '''
     def get_bool(self, node):
         clade_set = self.make_clade_set(node)
-        return self.meta_dict.isin(clade_set)
+        return self.meta_dict.isin(clade_set).astype(str)
         
     '''
     return boolean list not corresponding to rows
     '''
     def get_not_bool(self, node):
         clade_set = self.make_clade_set(node)
-        return ~self.meta_dict.isin(clade_set)
+        return ~self.meta_dict.isin(clade_set).astype(int)
         rows = self.df[~self.meta_dict.isin(clade_set)]
         return rows
 
