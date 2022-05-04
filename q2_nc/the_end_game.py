@@ -59,12 +59,17 @@ samples = 0
 for node in tree.get_tree().traverse(strategy="preorder"):
     initial = time.perf_counter()
     taxid = node.taxid
-    if samples == tree.get_samples(node):
-        estimator.save(path+str(taxid)+'.qza')
+    newSamples = tree.get_samples(node)
+    if newSamples < 20:
+        final = time.perf_counter()
+        print(final-initial)
+        continue;
+    if samples == newSamples:
+        #estimator.save(path+str(taxid)+'.qza')
         final = time.perf_counter()
         print(final-initial)
         continue
-    samples = tree.get_samples(node)
+    samples = newSamples
     
     #Joelle speed decistion 
     #if tree.decision(taxid) is False:
@@ -85,6 +90,10 @@ for node in tree.get_tree().traverse(strategy="preorder"):
     #meta.insert(0, "isChild", boolIDS, True)
     # change trains to return roc_auc instead of probs
     roc_auc, estimator = qiime_code.trains(meta, ft, meta_df) # only estimator is valuable, classifier
+    #TODO: ERROR CHECK
+    if len(roc_auc) < 2:
+        #tree.prune(node.get_children())
+        continue;
     # can we save in the node?
     #estimator.save(path+str(taxid)+'.qza')
     if roc_auc[1] > 0.5: 
