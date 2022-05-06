@@ -39,7 +39,15 @@ def classify(ft, taxid):
 
     return y_pred, probs
 
-
+def traverse(probs, meta, taxid_node)
+    result = ROC(probs, meta)
+    if (result>0.5):
+         children = taxid_node.get_children()
+         children.total_samples()
+         #tranform metat 
+            #call with childrens meta data 
+    
+  
 
 ft = "tb.qza"
 og_df = pd.read_csv("metadata.tsv", sep='\t')
