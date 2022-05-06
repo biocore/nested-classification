@@ -40,7 +40,7 @@ import time
 
 
 
-
+count = 0
 og_df = pd.read_csv("metadata.tsv", sep='\t')
 tax_col = "ncbi_taxon_id" 
 id_col = "sample-id"
@@ -56,18 +56,19 @@ tree = TreeClass(taxid, df, tax_col)
 
 #tree.print_total_samples()
 samples = 0
+initial = time.perf_counter()
 for node in tree.get_tree().traverse(strategy="preorder"):
-    initial = time.perf_counter()
+    
     taxid = node.taxid
     newSamples = tree.get_samples(node)
     if newSamples < 20:
-        final = time.perf_counter()
-        print(final-initial)
+        #final = time.perf_counter()
+        #print(final-initial)
         continue;
     if samples == newSamples:
         #estimator.save(path+str(taxid)+'.qza')
-        final = time.perf_counter()
-        print(final-initial)
+        #final = time.perf_counter()
+        #print(final-initial)
         continue
     samples = newSamples
     
@@ -85,12 +86,19 @@ for node in tree.get_tree().traverse(strategy="preorder"):
     meta_df.insert(1, "isChild", boolIDS, True)
     #THIS LINE DOES NOT WORK:
     meta_df.set_index(meta_df.columns[0], drop=True, append=False, inplace=True)
+    
     #print(meta_df)
-    meta, ft = qiime_code.create_tree(meta_df,'tb.qza')
+    try:
+        meta, ft = qiime_code.create_tree(meta_df,'tb.qza')
+    except:
+        print("some error in create_tree")
     #meta.insert(0, "isChild", boolIDS, True)
     # change trains to return roc_auc instead of probs
-    roc_auc, estimator = qiime_code.trains(meta, ft, meta_df) # only estimator is valuable, classifier
-    #TODO: ERROR CHECK
+    try:
+        roc_auc, estimator = qiime_code.trains(meta, ft, meta_df) # only estimator is valuable, classifier
+    except:
+        print("some error in trains")
+    
     if len(roc_auc) < 2:
         #tree.prune(node.get_children())
         continue;
@@ -105,9 +113,14 @@ for node in tree.get_tree().traverse(strategy="preorder"):
         #for j in path_list[0:i+1]
            #path = path + '/' + j   
         #path = path+taxid
-       
+        count+=1
         estimator.save(path+str(taxid)+'.qza')
-        final = time.perf_counter()
+        #final = time.perf_counter()
         # estimator > output @ row_taxid
         #kids.estimator = estimator
-    print(final-initial)
+    #print(final-initial)
+    
+final = time.perf_counter()
+print(count)
+print("\n")
+print(final-initial)
