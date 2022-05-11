@@ -1,3 +1,4 @@
+import biom
 import qiime2 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,6 +25,12 @@ fet_tab = None
 def create_tree(meta, ft): 
 	fet_tab = Artifact.load(ft)
 	meta_d = qiime2.Metadata(meta)
+
+	tab = fet_tab.view(biom.Table)
+	df = meta_d.to_dataframe()
+	df = df.loc[tab.ids()]
+	meta_d = qiime2.Metadata(df)
+	
 	return meta_d, fet_tab
 	
 	

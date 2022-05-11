@@ -61,10 +61,12 @@ for node in tree.get_tree().traverse(strategy="preorder"):
     
     taxid = node.taxid
     newSamples = tree.get_samples(node)
+    #condition 1: at least 20 overall samples 
     if newSamples < 20:
         #final = time.perf_counter()
         #print(final-initial)
         continue;
+    #condition 2: sample set is unqiue 
     if samples == newSamples:
         #estimator.save(path+str(taxid)+'.qza')
         #final = time.perf_counter()
@@ -91,13 +93,19 @@ for node in tree.get_tree().traverse(strategy="preorder"):
     try:
         meta, ft = qiime_code.create_tree(meta_df,'tb.qza')
     except:
+        print("*** ERROR *** ERROR *** ERROR *** ERROR ***")
+        print(taxid)
         print("some error in create_tree")
+        continue;
     #meta.insert(0, "isChild", boolIDS, True)
     # change trains to return roc_auc instead of probs
     try:
         roc_auc, estimator = qiime_code.trains(meta, ft, meta_df) # only estimator is valuable, classifier
     except:
+        print("*** ERROR *** ERROR *** ERROR *** ERROR ***")
+        print(taxid)
         print("some error in trains")
+        continue;
     
     if len(roc_auc) < 2:
         #tree.prune(node.get_children())
