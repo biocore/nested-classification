@@ -76,28 +76,6 @@ class Finale:
             return True
         return False
 
-    #find unique child -> return node
-    '''
-    def unique_child(self, node):
-        valid = True
-        if (child.is_leaf()):
-            valid = False
-            return node, valid
-        max_taxid = NULL
-        max_prob = 0
-        samples = self.tree.get_samples(node)
-        for child in node.get_children():
-    	    if self.checks(child):
-    		    continue
-            
-            if self.not_unique(child, samples):
-                child, valid = self.unique_child(child)
-            else: 
-                return self.recursive(node)
-
-        return max_taxid, valid
-        '''
-
 
     def recursive(self, node):
         taxid = node.taxid
@@ -113,75 +91,38 @@ class Finale:
             if self.checks(child):
                 continue;
 
-            #TODO
+            #if a child is not unique, it's siblings have no samples 
             if self.not_unique(child, parent_samp):
                 return self.recursive(child)
-                #child, test = self.unique_child(node)
 
             avg = self.classify(child_taxid)
-            if avg >= max_prob:
+            if avg > max_prob:
                 max_prob = avg
                 max_node = child
+            #if child_taxid == 40674:
+                #print(f"Mammals prob: {avg}")
+            #TODO: if else (equal) then add to list?? 
         if max_node == NULL:
             return taxid  
-        #if max_prob < 0.5:
-         #   return max_node.taxid  
+        #if max_prob < 0.8:
+         #   return taxid  
+        print(f"taxid: {max_node.taxid} | prob: {max_prob}")
         return self.recursive(max_node)
 
 
-'''
-feature table, node, meta data  
 
-def classify(ft, taxid_node):
-	master_store = {}
-	file = "estimator/" + str(taxid_node.taxid)+ ".qza"
-	esty = Artifact.load(file)
-	y_pred, probs = sample_classifier.actions.predict_classification(feature_data, esty)
-        
-    #goal: if leaf -> 
-	if taxid_node.isLeaf() == false:
-		max
-		max_taxid
-		for i in probs:
-		if probs.val < max:
-			max_taxid = probs.taxid
-		max_taxid1 = classify(ft, max_taxid)
-	else:
-		return (max_taxid = max_taxid1)
-
-        master_store = master_store | traverse(ft , taxid_node) #merging the returned dictionary with the returned dictionary should work for python 3.9 and up
-	closest_match = max(master_store, key = master_store.get) # should return the key of the max value in this case the highest ROC  
-	
-	return y_pred, probs
-
-def traverse(ft, taxid_node)
-	store = {}# a dictionary that store the leafs that have greater then 0.5
-	for curr_node in taxid_node.traverse(strategy="preorder"):
-		y_pred, probs = sample_classifier.actions.predict_classification(feature_data, esty):
-			if(ROC(probs, get_bool(taxid)) > 0.5): 
-				if(node.is_leaf()):
-					store[taxid] =  ROC(probs, get_bool(taxid))
-
-	return store 
-
-def caller(ft, root, meta):
-	feature_data = Artifact.load(ft)
-	classify(feature_data,taxid_node)
-
-
-'''
 
 
 #ft = "man_127242_feature-table.qza"
-ft = "ft2.0.qza"
+#ft = "ft2.0.qza"
+ft = "88201_feature-table.qza"
 og_df = pd.read_csv("metadata.tsv", sep='\t')
 tax_col = "ncbi_taxon_id" 
 id_col = "sample-id"
 
 finishing_up = Finale(ft)
 taxid = finishing_up.recursive(finishing_up.root())
-print(taxid)
-print(finishing_up.classify(taxid))
+print(f"final taxid: % {taxid}")
 
 
 '''
@@ -209,21 +150,7 @@ print("probs")
 #print(probs_average(probs))
 #print(pred[~pred])
 #print(pred)
-#printthis = Artifact.view(y_pred, str)
-#pred = Visualization.load(probs) 
-#pred = 
-
-
-
-
-while node is not NULL: 
-    taxid = node.taxid
-    newSamples = tree.get_samples(node)
-    if newSamples < 20:
-        continue;
-    if samples == newSamples:
-        continue
-    samples = newSamples
+#
 '''
     
 
