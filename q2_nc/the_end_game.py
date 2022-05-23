@@ -1,3 +1,4 @@
+from tkinter import SEPARATOR
 import qiime2 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,26 +30,37 @@ import qiime_code
 import time
 
 
-#class Train:
-
-    
-#    def __init__(self, metadata, tax_col):
-#        self.metadata = metadata
- #       df = pd.read_csv(metadata, sep='\t')
- #       taxid = 7742 #vertebraes, we can change this
-  #      self.ncbi_tree = TreeClass(taxid, df, tax_col)
-
 
 
 count = 0
-og_df = pd.read_csv("metadata.tsv", sep='\t')
+og_df = pd.read_csv("metadata_birdless.txt", sep='\t')
+'''
+og_df.drop(og_df.index[(og_df["host_taxid"] == "not applicable")],axis=0,inplace=True)
+og_df.drop(og_df.index[(og_df["host_taxid"] == "None")],axis=0,inplace=True)
+
+
+
+tax_col = "host_taxid" 
+
+#loop through all taxids
+
+dict = og_df["host_taxid"].value_counts()
+
+for key, value in dict.items():
+
+    if dict[key] < 2:
+        og_df.drop(og_df.index[(og_df["host_taxid"] == key)],axis=0,inplace=True)
+        
+og_df.to_csv("mammal_metadata.txt", index = False, sep = '\t')
+'''
 tax_col = "ncbi_taxon_id" 
-id_col = "sample-id"
+id_col = "sample_name"
+        
 
 df = pd.DataFrame()
 df.insert(0, id_col, og_df[id_col], True)
 df.insert(1, tax_col, og_df[tax_col], True)
-
+#.astype(int)
 taxid = 7742 #vertebraes
 path = "estimator/"
 #os.mkdir(path, mode = 0o777, dir_fd = None)
@@ -74,6 +86,7 @@ for node in tree.get_tree().traverse(strategy="preorder"):
         continue
     samples = newSamples
     
+    
     #Joelle speed decistion 
     #if tree.decision(taxid) is False:
     #    continue; 
@@ -91,7 +104,7 @@ for node in tree.get_tree().traverse(strategy="preorder"):
     
     #print(meta_df)
     try:
-        meta, ft = qiime_code.create_tree(meta_df,'tb.qza')
+        meta, ft = qiime_code.create_tree(meta_df,'ft_birdless.qza')
     except:
         print("*** ERROR *** ERROR *** ERROR *** ERROR ***")
         print(taxid)

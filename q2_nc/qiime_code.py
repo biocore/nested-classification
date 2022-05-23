@@ -15,6 +15,7 @@ from qiime2 import Artifact
 from qiime2 import Visualization
 from qiime2.plugins import sample_classifier
 from qiime2.plugins import feature_table
+
 #import mcdonald
 import pandas as pd
 from IPython.display import display
@@ -26,6 +27,7 @@ def create_tree(meta, ft):
 	fet_tab = Artifact.load(ft)
 	meta_d = qiime2.Metadata(meta)
 
+	#fet_tab = qiime2.plugins.feature_table.methods(fet_tab, metadata=meta_d)
 	tab = fet_tab.view(biom.Table)
 	df = meta_d.to_dataframe()
 	df = df.loc[tab.ids()]

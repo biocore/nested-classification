@@ -19,6 +19,7 @@ class TreeClass:
         #self.meta_dict = self.df[tax_col].value_counts()
         self.meta_dict = self.df[tax_col]
         self.count_dict = self.meta_dict.value_counts()
+        
         self.build_sample_tree()
         #print(self.ncbi_tree)
         # make better tree
@@ -33,6 +34,7 @@ class TreeClass:
         for curr_node in self.ncbi_tree.traverse(strategy="postorder"):
         
             if curr_node.is_leaf(): 
+    
                 if curr_node.taxid in self.count_dict: 
                     curr_node.self_samples = self.count_dict[curr_node.taxid]
                     curr_node.total_samples = self.count_dict[curr_node.taxid]
@@ -40,7 +42,7 @@ class TreeClass:
                     curr_node.self_samples = 0
                     curr_node.total_samples = 0
             else:
-                if curr_node.taxid in self.count_dict: 
+                if curr_node.taxid in self.count_dict:
                     curr_node.self_samples = self.count_dict[curr_node.taxid]
                 else:
                     curr_node.self_samples = 0
@@ -202,12 +204,19 @@ class TreeClass:
         return self.ncbi_tree
 
 '''
-df = pd.read_csv('metadata.tsv', sep='\t') 
+df = pd.read_csv('metadata_parsed.txt', sep='\t') 
 #print(len(df.index))
 real_tree = 7742 #where should we start? vertebrae = 7742 
 ncbi_tree = TreeClass(real_tree, df, 'ncbi_taxon_id')
-print(ncbi_tree.get_bool(7742))
 
+birdies = ncbi_tree.get_identifiers(8457, "sample_name")
+for bird in birdies:
+    df.drop(df.index[(df["sample_name"] == bird)],axis=0,inplace=True)
+df.to_csv("metadata_birdless.txt", index = False, sep = '\t')
+
+
+print(ncbi_tree.make_clade_set(8457))
+print(ncbi_tree.make_clade_set(40674))
 
 
 #homo_dict = {9605: 2, 9606: 3, 2665953:10}

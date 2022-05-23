@@ -36,9 +36,13 @@ class Finale:
 
     def __init__(self, ft):
         self.ft = ft
-        df = pd.read_csv("metadata.tsv", sep='\t')
+        df = pd.read_csv("metadata_birdless.txt", sep='\t')
+        #df.drop(df.index[(df["host_taxid"] == "not applicable")],axis=0,inplace=True)
+        #df.drop(df.index[(df["host_taxid"] == "None")],axis=0,inplace=True)
+        
         taxid = 7742
-        tax_col = "ncbi_taxon_id" 
+        tax_col = "ncbi_taxon_id"  
+        #df[tax_col] = df[tax_col].astype(int)
         self.tree = TreeClass(taxid, df, tax_col)
 
     def root(self):
@@ -100,7 +104,8 @@ class Finale:
                 max_prob = avg
                 max_node = child
             #if child_taxid == 40674:
-                #print(f"Mammals prob: {avg}")
+             #   print(f"Mammals prob: {avg}")
+            #    return self.recursive(child)
             #TODO: if else (equal) then add to list?? 
         if max_node == NULL:
             return taxid  
@@ -114,15 +119,42 @@ class Finale:
 
 
 #ft = "man_127242_feature-table.qza"
-#ft = "ft2.0.qza"
-ft = "88201_feature-table.qza"
-og_df = pd.read_csv("metadata.tsv", sep='\t')
-tax_col = "ncbi_taxon_id" 
-id_col = "sample-id"
+ft = "ft2.0.qza"
+#ft = "88201_feature-table.qza"
+#og_df = pd.read_csv("metadata.tsv", sep='\t')
+#tax_col = "ncbi_taxon_id" 
+#id_col = "sample-id"
 
 finishing_up = Finale(ft)
 taxid = finishing_up.recursive(finishing_up.root())
+#print(f"40674: {finishing_up.classify(40674)}")
 print(f"final taxid: % {taxid}")
+'''
+print(f"8457: {finishing_up.classify(8457)}")
+print(f"8492: {finishing_up.classify(8492)}")
+print(f"32524: {finishing_up.classify(32524)}")
+print(f"40674: {finishing_up.classify(40674)}")
+print(f"314145: {finishing_up.classify(314145)}")
+print(f"314146: {finishing_up.classify(314146)}")
+print(f"1329799: {finishing_up.classify(1329799)}")
+8457: 0.57
+8492: 0.07
+32524: 1.0
+40674: 0.26
+314145: 0.02
+314146: 0.0
+1329799: 0.2
+8457 - Sauropsida
+8492 - Archosauria
+32524 - Amniota (yay)
+40674 - Mammalia (sus)
+314145 - placentals (bad)
+314146 - Euarchontoglires (also placentals)
+1329799 - Archelosauria (clade grouping turtles and archosaurs and their fossil relatives.)
+'''
+
+
+
 
 
 '''
