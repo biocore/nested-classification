@@ -1,17 +1,15 @@
 sample_name	ncbi_taxon_id	something_else
-h1	9605	i
-h2	9605	A
-h3	9606	eagle
-h4	9606	M
-h5	9606	paeba
-h6	9606	kingsnake
-h7	2665953	masked
-h8	2665953	pair1
-h9	2665953	
-h10	2665953	weaver
-h11	2665953	dragon
-h12	2665953	koala
-h13	2665953	human
-h14	2665953	
-h15	2665953	qiita_study_id
-h16	2665953	difficilis
+h2	9606	homo sapiens
+h3	63221	homo sapiens Neandertal
+h4	741158	homo sapiens Denisova
+h5	1425170	homo heidelberg
+h6	9606	homo sapiens
+h7	9606	homo sapiens
+h8	9606	homo sapiens
+h9	63221	homo sapiens Neandertal
+h10	63221	homo sapiens Neandertal
+h11	63221	homo sapiens Neandertal
+h12	63221	homo sapiens Neandertal
+h13	741158	homo sapiens Denisova
+h14	741158	homo sapiens Denisova
+h15	9606	homo sapiens
