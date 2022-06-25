@@ -66,8 +66,6 @@ class TreeClass:
         for curr_node in self.ncbi_tree.traverse(strategy="postorder"):
             print(curr_node.total_samples) 
 
-    def get_samples(self, node):
-        return node.total_samples
     '''
     prints "taxid: [number of respective accumulated samples]" for all non-zero
     total_samples in tree
@@ -105,7 +103,12 @@ class TreeClass:
         else:
             return False
 
-        
+    def get_samples(self, node):
+        try:
+            val = node.total_samples
+        except: 
+            val = -1
+        return val     
 
     '''
     HELPER FUNCTION (kinda):
@@ -202,6 +205,9 @@ class TreeClass:
         
     def get_tree(self):
         return self.ncbi_tree
+    
+    def get_root(self):
+        return self.ncbi_tree.get_tree_root()
 
 '''
 df = pd.read_csv('metadata_parsed.txt', sep='\t') 
