@@ -27,8 +27,8 @@ class TreeTests(TestCase):
         self.assertEqual(real_sum, trial_sum)
 
     def test_node_look_up_taxid(self):
-        real_sum = self.ncbi_tree
-        trial_sum = self.ncbi_tree.look_up_taxid(9605)
+        real_sum = self.ncbi_tree.get_root()
+        trial_sum = self.ncbi_tree.look_up_taxid(9605, False)
         self.assertEqual(real_sum, trial_sum)    
 
     def test_sum_get_samples(self):

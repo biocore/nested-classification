@@ -58,6 +58,7 @@ class Finale:
         else:
             esty = Artifact.load(file)
             y_pred, probs = sample_classifier.actions.predict_classification(feature_data, esty)
+            print(probs.view(pd.DataFrame))
             avg_prob = self.probs_average(probs)
         return avg_prob
         #return y_pred, probs
