@@ -46,7 +46,9 @@ class TreeTests(TestCase):
 
 
     def test_clade_set(self):
-        trial = self.ncbi_tree.make_clade_set(9606)
+        #root = 9606
+        root = self.ncbi_tree.look_up_taxid(9606, return_samples=False)
+        trial = self.ncbi_tree.make_clade_set(root)
         actual = set()
         actual.add(9606) 
         actual.add(63221)
@@ -54,7 +56,9 @@ class TreeTests(TestCase):
         self.assertEqual(trial, actual)
 
     def test_bool_list(self):
-        trial = self.ncbi_tree.get_bool(9606)
+        #root = 9606
+        root = self.ncbi_tree.look_up_taxid(9606, return_samples=False)
+        trial = self.ncbi_tree.get_bool(root)
         inList = {9606, 63221, 741158}
         actual = self.df['ncbi_taxon_id'].isin(inList).astype(str)
         #9605: 0

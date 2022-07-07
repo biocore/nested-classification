@@ -117,14 +117,13 @@ class TreeClass:
     '''
     def make_clade_set(self, node):
         clade = set()
-        return_bool = False 
-        root_type = self.look_up_taxid(node, return_samples=False)
+        check = self.get_samples(node)
         #for curr_node in self.ncbi_tree.traverse(strategy="postorder"):
         #    if taxid == curr_node.taxid: 
-        if root_type == False:
+        if check == -1:
             print("This taxid node is not in tree")
-            return return_bool
-        for curr_node in root_type.traverse(strategy="preorder"):
+            return clade
+        for curr_node in node.traverse(strategy="preorder"):
             clade.add(curr_node.taxid) 
         return clade
     

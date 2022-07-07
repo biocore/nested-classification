@@ -34,12 +34,13 @@ import time
 
 class Finale:
 
-    def __init__(self, ft):
+    def __init__(self, ft, mt, folder):
         self.ft = ft
-        df = pd.read_csv("metadata_birdless.txt", sep='\t')
+        df = pd.read_csv(mt, sep='\t')
+        #df = pd.read_csv("metadata_birdless.txt", sep='\t')
         #df.drop(df.index[(df["host_taxid"] == "not applicable")],axis=0,inplace=True)
         #df.drop(df.index[(df["host_taxid"] == "None")],axis=0,inplace=True)
-        
+        self.path = folder
         taxid = 7742
         tax_col = "ncbi_taxon_id"  
         #df[tax_col] = df[tax_col].astype(int)
@@ -50,7 +51,7 @@ class Finale:
 
     def classify(self, taxid):
         feature_data = Artifact.load(self.ft)
-        file = "estimator/" + str(taxid)+ ".qza"
+        file = self.path + str(taxid)+ ".qza"
         if not exists(file):
             print("bruh")
             print(taxid)
@@ -130,6 +131,8 @@ finishing_up = Finale(ft)
 taxid = finishing_up.recursive(finishing_up.root())
 #print(f"40674: {finishing_up.classify(40674)}")
 print(f"final taxid: % {taxid}")
+
+
 '''
 print(f"8457: {finishing_up.classify(8457)}")
 print(f"8492: {finishing_up.classify(8492)}")
