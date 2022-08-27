@@ -2,3 +2,4 @@ name: nested-classification
 
 dependencies:
   - pandas
+# - ete3
