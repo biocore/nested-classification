@@ -2,13 +2,6 @@ import pandas as pd
 from ete3 import NCBITaxa
 ncbi = NCBITaxa()
 
-import biom
-import qiime2 
-from qiime2 import Artifact
-from qiime2 import Visualization
-from qiime2.plugins import sample_classifier
-
-
 
 class TreeClass:
 

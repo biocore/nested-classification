@@ -1,7 +1,10 @@
+import typing
 import qiime2
 import biom
 from qiime2 import Artifact
 from qiime2.plugins import sample_classifier
+from q2_types.sample_data import SampleData
+from q2_sample_classifier._type import (ClassifierPredictions, Probabilities)
 from _helpers import TreeClass
 import pandas as pd
 from ete3 import NCBITaxa
@@ -57,11 +60,11 @@ def _recursive(tree, node, probalities: pd.DataFrame, predictions: pd.Series, ft
 
 def predict_samples(
         metadata: qiime2.Metadata, 
-        feature_table: biom.Table, 
-        input_folder: str, 
-        tax_col: str = 'ncbi_taxon_id') -> (tuple()[pd.DataFrame, pd.Series]):
+        table: biom.Table, 
+        input_directory: str) -> pd.DataFrame:
+    tax_col = 'ncbi_taxon_id'
     df = pd.read_csv(metadata, sep='\t')
-    path = input_folder
+    path = input_directory
     taxid = 7742
 
     tree = TreeClass(taxid, df, tax_col)
@@ -70,7 +73,7 @@ def predict_samples(
 
     probs = pd.DataFrame()
     pred = pd.Series()
-    probabilites, predictions = _recursive(tree, node, probs, pred, feature_table, input_folder)
-    return probabilites, predictions
+    probabilites, predictions = _recursive(tree, node, probs, pred, table, path)
+    return probabilites
 
 

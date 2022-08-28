@@ -17,10 +17,14 @@ from qiime2.plugin import (
     Numeric, Categorical, Citations, Visualization, TypeMatch)
 
 
+from qiime2.plugins import sample_classifier
 from q2_types.sample_data import SampleData, AlphaDiversity
 import q2_nc
-from q2_nc._train_samples import train_samples
-from q2_nc._predict_samples import predict_samples 
+from q2_nc import *
+import _training 
+from _predict_samples import predict_samples
+
+
 
 plugin = Plugin(
     name='nested-classification',
@@ -63,14 +67,14 @@ plugin.methods.register_function(
 )
 
 plugin.methods.register_function(
-    function=train_samples,
+    function=_training.training_samples,
     inputs={'table': FeatureTable[Frequency]},
     parameters={'output_directory': Str, 'metadata': Metadata},
-    output=[('sample_estimators', SampleEstimator[Classifier])] + pipeline_outputs,
+    outputs=[('sample_estimators', SampleEstimator[Classifier])],
     input_descriptions={'table': 'Feature table containing all features that '
                                'should be used for target prediction.'},
     parameter_descriptions={'output_directory': 'Folder to hold all trained estimators','metadata': 'Categorical metadata column to use as prediction target.'},
-    output_descriptions={'sample_estimator': 'Trained sample estimator.'} + output_descriptions,
+    output_descriptions={'sample_estimators': 'Trained sample estimator.'},
     name='Train classifiers ',
     description='Train and test many nested supervised learning classifiers in taxonomic tree formed with metadata.',
     citations=[]
@@ -80,12 +84,13 @@ plugin.methods.register_function(
     function=predict_samples,
     inputs={'table': FeatureTable[Frequency]},
     parameters={'input_directory': Str, 'metadata': Metadata},
-    output=[('predictions', SampleData[ClassifierPredictions]),
+    outputs=[#('predictions', SampleData[ClassifierPredictions])],
              ('probabilities', SampleData[Probabilities])],
     input_descriptions={'table': 'Feature table containing all features that '
                                'should be used for target prediction.'},
     parameter_descriptions={'input_directory': 'Folder with all trained estimators','metadata': 'Categorical metadata column to use as prediction target.'},
-    output_descriptions={'predictions': 'Predicted target values for each input sample.', 'probabilities': 'Predicted class probabilities for each input sample.'},
+    output_descriptions={#'predictions': 'Predicted target values for each input sample.', 
+                        'probabilities': 'Predicted class probabilities for each input sample.'},
     name='Predict classifications from trained classifiers',
     description='Use trained classifiers in taxonomic tree to predict classifications',
     citations=[]

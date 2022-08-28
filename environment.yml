@@ -2,4 +2,6 @@ name: nested-classification
 
 dependencies:
   - pandas
+  - qiime2 
+  - from qiime2.plugins import sample_classifier
 # - ete3
