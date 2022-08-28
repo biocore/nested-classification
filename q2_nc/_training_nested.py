@@ -6,8 +6,8 @@ import biom
 from q2_sample_classifier._type import (SampleEstimator, Classifier)
 
 
-from _helpers import TreeClass
-import _helpers2 
+from q2_nc._helpers import TreeClass
+import q2_nc._helpers2 
 
 
 
@@ -47,8 +47,8 @@ def training_samples(metadata: qiime2.Metadata, output_directory: str, table: bi
         meta_df.set_index(meta_df.columns[0], drop=True, append=False, inplace=True)
 
         #TODO: GET VISUALIZERS 
-        meta, ft = _helpers2._create_tree(meta_df, table)
-        roc_auc, estimator = _helpers2._trains(meta, ft, meta_df)
+        meta, ft = q2_nc._helpers2._create_tree(meta_df, table)
+        roc_auc, estimator = q2_nc._helpers2._trains(meta, ft, meta_df)
         #estimator, importance, pred, summary, accuracy, probs =classify.classify_samples(,table,meta_df) 
         
 

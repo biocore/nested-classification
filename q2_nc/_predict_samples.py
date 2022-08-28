@@ -1,11 +1,10 @@
-import typing
 import qiime2
 import biom
 from qiime2 import Artifact
-from qiime2.plugins import sample_classifier
+from q2_sample_classifier import classify
 from q2_types.sample_data import SampleData
 from q2_sample_classifier._type import (ClassifierPredictions, Probabilities)
-from _helpers import TreeClass
+from q2_nc._helpers import TreeClass
 import pandas as pd
 from ete3 import NCBITaxa
 from os.path import exists
@@ -44,7 +43,7 @@ def _recursive(tree, node, probalities: pd.DataFrame, predictions: pd.Series, ft
                 print(f'Warning: {file} not found. Potential metadata issue.')
             else:
                 estimator = Artifact.load(file)
-                y_pred, probs = sample_classifier.actions.predict_classification(feature_data, estimator)
+                y_pred, probs = classify.predict_classification(feature_data, estimator)
                 probalities.append(probs)
                 predictions.append(y_pred)
                 avg = probs.view(pd.DataFrame)['True'].mean()               

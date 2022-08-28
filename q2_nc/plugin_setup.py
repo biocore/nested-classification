@@ -19,9 +19,8 @@ from qiime2.plugin import (
 
 from q2_types.sample_data import SampleData, AlphaDiversity
 import q2_nc
-from q2_nc import *
-from _training_nested import training_samples
-from _predict_samples import predict_samples
+from q2_nc._training_nested import training_samples
+from q2_nc._predict_samples import predict_samples
 
 
 
