@@ -17,11 +17,10 @@ from qiime2.plugin import (
     Numeric, Categorical, Citations, Visualization, TypeMatch)
 
 
-from qiime2.plugins import sample_classifier
 from q2_types.sample_data import SampleData, AlphaDiversity
 import q2_nc
 from q2_nc import *
-import _training 
+from _training_nested import training_samples
 from _predict_samples import predict_samples
 
 
@@ -67,7 +66,7 @@ plugin.methods.register_function(
 )
 
 plugin.methods.register_function(
-    function=_training.training_samples,
+    function=training_samples,
     inputs={'table': FeatureTable[Frequency]},
     parameters={'output_directory': Str, 'metadata': Metadata},
     outputs=[('sample_estimators', SampleEstimator[Classifier])],

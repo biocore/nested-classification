@@ -2,7 +2,7 @@ import biom
 import qiime2
 from qiime2 import Artifact
 from qiime2 import Visualization
-from qiime2.plugins import sample_classifier
+from q2_sample_classifier import classify
 import pandas as pd 
 
 
@@ -44,8 +44,8 @@ def _ROC(probs, meta):
 	return roc_auc
 
 def _trains(meta, ft, df): #return trained model
-	train, test, trash_1, trash_2 = sample_classifier.actions.split_table(ft, meta.get_column("isChild"))
-	estimator, importance = sample_classifier.actions.fit_classifier(train, meta.get_column("isChild"))
-	y_pred, probs = sample_classifier.actions.predict_classification(test, estimator)
+	train, test, trash_1, trash_2 = classify.split_table(ft, meta.get_column("isChild"))
+	estimator, importance = classify.fit_classifier(train, meta.get_column("isChild"))
+	y_pred, probs = classify.predict_classification(test, estimator)
 	roc = _ROC(probs, df) 
 	return roc, estimator 

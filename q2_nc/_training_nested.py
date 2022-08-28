@@ -5,6 +5,7 @@ import qiime2
 import biom
 from q2_sample_classifier._type import (SampleEstimator, Classifier)
 
+
 from _helpers import TreeClass
 import _helpers2 
 
@@ -47,7 +48,9 @@ def training_samples(metadata: qiime2.Metadata, output_directory: str, table: bi
 
         #TODO: GET VISUALIZERS 
         meta, ft = _helpers2._create_tree(meta_df, table)
-        roc_auc, estimator = _helpers2._trains(meta, ft, meta_df) 
+        roc_auc, estimator = _helpers2._trains(meta, ft, meta_df)
+        #estimator, importance, pred, summary, accuracy, probs =classify.classify_samples(,table,meta_df) 
+        
 
         if len(roc_auc) < 2:
             continue;
