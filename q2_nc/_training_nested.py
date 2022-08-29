@@ -75,7 +75,7 @@ def training_samples(metadata: qiime2.Metadata, output_directory: str, table: bi
         #estimator.save(output_directory+str(taxid)+'.qza')
     
     print("Out of for-loop")
-    return estimator
+    return estimator 
             
     
 
