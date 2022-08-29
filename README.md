@@ -39,3 +39,13 @@ The second method queries human data against the previously trained models.
 ### Outputs
 1. probabilities.qzv: the probability of each query belonging to the taxid, or the model's predicted likelihood the individual is in the taxid's clade
 2. predictions.qzv; predictions of "True" or "False" whether or not the individual belonds to that taxid's clade
+
+# How does this work? 
+
+q2-nc uses ete3.NBITaxa to pull information from NCBI Database. Using this, we are able to create a taxonomy tree from the taxids in the metadata. This taxonomy tree follows an evolutionary hierachy with vertebrate at the root and species as the leaves. Starting at vertebrate, we traverse down the tree to train models of subsets of the animal data at every (valid) node. Then, this same tree can be re-built so the human data can be inputted into the nested-classifiers through a depth traversal of the taxonomy tree. 
+
+# References 
+To be added..
+QIIME2
+q2-sample-classifier
+ete3
