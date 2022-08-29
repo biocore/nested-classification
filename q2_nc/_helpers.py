@@ -131,7 +131,7 @@ class TreeClass:
     # "sample_id" in this instance
     '''
     def get_identifiers(self, taxid, id_col):
-        node = self.get_node(taxid, return_samples=False)
+        node = self.get_node(taxid)
         clade_set = self.make_clade_set(node)
         rows = self.df[self.meta_dict.isin(clade_set)]
         

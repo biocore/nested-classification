@@ -10,20 +10,25 @@ from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import label_binarize
 
-def _create_tree(meta, ft): 
-	fet_tab = Artifact.load(ft)
-	meta_d = qiime2.Metadata(meta)
+def _create_tree(meta, table): 
+	#fet_tab = Artifact.load(ft)
+	#fet_tab = ft
+	metadata = qiime2.Metadata(meta)
+	metadata = metadata.filter_ids(table.ids(axis='sample'))
+	
+	table = table.filter(metadata.ids)
 
 	#fet_tab = qiime2.plugins.feature_table.methods(fet_tab, metadata=meta_d)
-	tab = fet_tab.view(biom.Table)
-	df = meta_d.to_dataframe()
-	df = df.loc[tab.ids()]
-	meta_d = qiime2.Metadata(df)
+	#tab = fet_tab.view(biom.Table)
+	#df = meta_d.to_dataframe()
+	#df = df.loc[tab.ids()]
+	#meta_d = qiime2.Metadata(df)
 	
-	return meta_d, fet_tab
+	return metadata, table
 
 def _ROC(probs, meta):
-	data = probs.view(pd.DataFrame)
+	#data = probs.view(pd.DataFrame)
+	data = probs
 	
 	column = meta["isChild"]
 	column_label = data.index

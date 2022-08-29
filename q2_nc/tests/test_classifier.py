@@ -1,7 +1,24 @@
 from unittest import TestCase, main
+import pandas as pd
+import pandas.testing as pdt
+
+from q2_nc._training_nested import training_samples
+from q2_nc._helpers import TreeClass
+
+
 
 
 class ClassifierTests(TestCase):
+
+    def setUp(self):
+        df = pd.read_csv('metadata_test.tsv', sep='\t')
+        tax_col = 'ncbi_taxon_id'
+        id_col = 'sample_name'
+        taxid = 7742
+        tree = TreeClass(taxid, df, tax_col)
+
+
+
     def test_run_random_forests(self):
         # take pandas series describing binary labels for samples
         # take a feature table

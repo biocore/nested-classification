@@ -1,3 +1,4 @@
+import pickle
 import qiime2
 import biom
 from qiime2 import Artifact
@@ -34,19 +35,23 @@ def _recursive(tree, node, probalities: pd.DataFrame, predictions: pd.Series, ft
                 return _recursive(tree, child, probalities, predictions, ft, path)
 
             #avg = self.classify(child_taxid):
-            feature_data = Artifact.load(ft)
-            file = path + str(child_taxid)+ ".qza"
+            #feature_data = Artifact.load(ft)
+            file = path + "/" + str(child_taxid)+ ".qza"
 
             
             if not exists(file):
-                avg_prob = 0
+                avg = 0
                 print(f'Warning: {file} not found. Potential metadata issue.')
             else:
-                estimator = Artifact.load(file)
-                y_pred, probs = classify.predict_classification(feature_data, estimator)
-                probalities.append(probs)
-                predictions.append(y_pred)
-                avg = probs.view(pd.DataFrame)['True'].mean()               
+                infile = open(file,'rb')
+                estimator = pickle.load(infile)
+                infile.close()
+                #estimator = Artifact.load(estimator_str)
+                y_pred, probs = classify.predict_classification(ft, estimator)
+                print(probs, '\n')
+                probalities = probalities.append(probs)
+                predictions = predictions.append(y_pred)
+                avg = probs['True'].mean()               
             if avg > max_prob:
                 max_prob = avg
                 max_node = child
@@ -62,7 +67,7 @@ def predict_samples(
         table: biom.Table, 
         input_directory: str) -> pd.DataFrame:
     tax_col = 'ncbi_taxon_id'
-    df = pd.read_csv(metadata, sep='\t')
+    df = metadata.to_dataframe()
     path = input_directory
     taxid = 7742
 
@@ -73,6 +78,7 @@ def predict_samples(
     probs = pd.DataFrame()
     pred = pd.Series()
     probabilites, predictions = _recursive(tree, node, probs, pred, table, path)
+    print(f"\n final probabilities: {probabilites} \n")
     return probabilites
 
 
