@@ -1,5 +1,4 @@
 import pickle
-from typing import Tuple
 import qiime2
 import biom
 from qiime2 import Artifact
@@ -15,7 +14,7 @@ ncbi = NCBITaxa()
 
 
 
-def _recursive(tree, node, probalities: pd.DataFrame, predictions, ft, path):
+def _recursive(tree, node, probalities: pd.DataFrame, predictions: pd.Series, ft, path):
         taxid = node.taxid
         if (node.is_leaf()):
             return probalities, predictions
@@ -51,7 +50,7 @@ def _recursive(tree, node, probalities: pd.DataFrame, predictions, ft, path):
                 probalities[str(child_taxid) + ": True"] = probs['True']
                 #probalities.insert(1, str(child_taxid) + ": False", probs['False'])
                 #probalities.insert(2, str(child_taxid) + ": True", probs['True'])
-                predictions[child_taxid] = y_pred
+                predictions = predictions.append(y_pred)
                 avg = probs['True'].mean()               
             if avg > max_prob:
                 max_prob = avg
@@ -66,7 +65,7 @@ def _recursive(tree, node, probalities: pd.DataFrame, predictions, ft, path):
 def predict_samples(
         metadata: qiime2.Metadata, 
         table: biom.Table, 
-        input_directory: str) -> (tuple([pd.DataFrame, pd.DataFrame])):
+        input_directory: str) -> (tuple([pd.Series, pd.DataFrame])):
     tax_col = 'ncbi_taxon_id'
     df = metadata.to_dataframe()
     path = input_directory
@@ -77,7 +76,7 @@ def predict_samples(
     node = tree.get_root()
 
     
-    pred = pd.DataFrame()
+    pred = pd.Series()
     probs = pd.DataFrame()
     probabilites, predictions = _recursive(tree, node, probs, pred, table, path)
     print(f"\n final probabilities: {probabilites} \n")

@@ -44,25 +44,6 @@ output_descriptions = {
     'accuracy_results': 'Accuracy results visualization.'
 }
 
-# THIS IS EXAMPLE
-# The semantic type SampleData requires a property.
-# The only one available by default is AlphaDiversity
-# so let's "use" that for now, and worry about defining
-# our own property later
-plugin.methods.register_function(
-    function=q2_nc.samples_of_interest,
-    inputs={},
-    parameters={'metadata': Metadata},
-    outputs=[('samples_of_interest', SampleData[AlphaDiversity])],
-    input_descriptions={},
-    parameter_descriptions={'metadata': 'our sample metadata'},
-    output_descriptions={
-        'samples_of_interest': 'sampsasdles meeting a specific criteria',
-    },
-    name='do stuff',
-    description="do some super crazy complex",
-    citations=[]
-)
 
 plugin.methods.register_function(
     function=training_samples,
