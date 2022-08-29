@@ -21,7 +21,6 @@ def training_samples(metadata: qiime2.Metadata, output_directory: str, table: bi
     initial_df = metadata.to_dataframe()
     print(initial_df)
     print(initial_df[tax_col])
-    #initial_df = pd.read_csv(metadata, sep='\t')
 
     new_df = pd.DataFrame()
     new_df.insert(0, id_col, initial_df.index.values, True)
@@ -46,12 +45,10 @@ def training_samples(metadata: qiime2.Metadata, output_directory: str, table: bi
             continue;
         #condition 2: sample set is unqiue 
         if subset == curr_subset:
-            #estimator.save(path+str(taxid)+'.qza')
             continue
         subset = curr_subset
         boolIDS = tree.get_bool(node)
         # change create tree to return meta and ft
-        #df = dataframe of metadata
         meta_df = new_df.copy()
         meta_df.insert(1, "isChild", boolIDS, True)
         meta_df.set_index(meta_df.columns[0], drop=True, append=False, inplace=True)
@@ -59,8 +56,7 @@ def training_samples(metadata: qiime2.Metadata, output_directory: str, table: bi
         #TODO: GET VISUALIZERS 
         print(f"{taxid}: for pre-training")
         meta, ft = q2_nc._helpers2._create_tree(meta_df, table)
-        roc_auc, estimator = q2_nc._helpers2._trains(meta, ft, meta_df)
-        #estimator, importance, pred, summary, accuracy, probs =classify.classify_samples(,table,meta_df) 
+        roc_auc, estimator = q2_nc._helpers2._trains(meta, ft, meta_df) 
         
 
         if len(roc_auc) < 2:
@@ -72,10 +68,9 @@ def training_samples(metadata: qiime2.Metadata, output_directory: str, table: bi
         pickle.dump(estimator, outfile)
         outfile.close()
         print(f"{taxid}: saved")
-        #estimator.save(output_directory+str(taxid)+'.qza')
     
     print("Out of for-loop")
-    return estimator 
+    return sample_estimators 
             
     
 
